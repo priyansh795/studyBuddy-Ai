@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyBuddy AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand large"><span>📚</span> StudyBuddy <b>AI</b></div>
+      <p class="muted">Your personal AI-powered study planner.</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth="login">Login</button>
+        <button class="auth-tab" data-auth="signup">Create Account</button>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <label>Email<input id="loginEmail" type="email" required placeholder="you@example.com"></label>
+        <label>Password<input id="loginPassword" type="password" required placeholder="••••••••"></label>
+        <button class="primary wide" type="submit">Login</button>
+        <p class="demo-note">Local demo account data is stored in your browser.</p>
+      </form>
+
+      <form id="signupForm" class="auth-form hidden">
+        <div class="grid-2">
+          <label>Full name<input id="signupName" required placeholder="Your full name"></label>
+          <label>Email<input id="signupEmail" type="email" required placeholder="you@example.com"></label>
+        </div>
+        <div class="grid-2">
+          <label>Password<input id="signupPassword" type="password" minlength="6" required placeholder="Minimum 6 characters"></label>
+          <label>Class / Course<input id="signupCourse" required placeholder="e.g. B.Tech IT"></label>
+        </div>
+        <label>School / College<input id="signupCollege" placeholder="Your school or college"></label>
+        <label>Subjects <span class="hint">(comma separated)</span><input id="signupSubjects" placeholder="DSA, DBMS, Maths"></label>
+        <label>Study goal<textarea id="signupGoal" rows="2" placeholder="e.g. Prepare for semester exams and improve DSA"></textarea></label>
+        <label>Daily study target (hours)<input id="signupHours" type="number" min="1" max="16" value="3"></label>
+        <button class="primary wide" type="submit">Create Account</button>
+      </form>
+    </div>
+  </section>
+
+  <div id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand"><span>📚</span> StudyBuddy <b>AI</b></div>
+      <div class="profile-mini">
+        <div id="avatar" class="avatar">U</div>
+        <div><strong id="sideName">User</strong><small id="sideCourse">Student</small></div>
+      </div>
+      <nav>
+        <button class="nav-item active" data-page="home">🏠 <span>Home</span></button>
+        <button class="nav-item" data-page="planner">🗓️ <span>Planner</span></button>
+        <button class="nav-item" data-page="topics">📖 <span>Topics</span></button>
+        <button class="nav-item" data-page="quiz">🤖 <span>AI Quiz</span></button>
+        <button class="nav-item" data-page="profile">👤 <span>Profile</span></button>
+        <button class="nav-item" data-page="settings">⚙️ <span>Settings</span></button>
+      </nav>
+      <button id="logoutBtn" class="logout">↪ Logout</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">STUDY DASHBOARD</p>
+          <h1 id="pageTitle">Welcome back!</h1>
+        </div>
+        <button id="mobileMenu" class="icon-btn">☰</button>
+      </header>
+
+      <section id="page-home" class="page">
+        <div class="hero">
+          <div>
+            <span class="pill">AI PERSONAL STUDY ASSISTANT</span>
+            <h2>Hi, <span id="heroName">Student</span> 👋</h2>
+            <p id="heroGoal">Let's make today's study session productive.</p>
+          </div>
+          <button class="primary" data-go="quiz">✨ Generate AI Quiz</button>
+        </div>
+        <div class="stats grid-4">
+          <div class="stat"><span>📋</span><small>Tasks</small><strong id="statTasks">0</strong></div>
+          <div class="stat"><span>✅</span><small>Completed</small><strong id="statDone">0</strong></div>
+          <div class="stat"><span>🤖</span><small>Quizzes</small><strong id="statQuizzes">0</strong></div>
+          <div class="stat"><span>🎯</span><small>Avg. Score</small><strong id="statScore">0%</strong></div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-head"><h3>Today's Tasks</h3><button class="text-btn" data-go="planner">View all</button></div>
+            <div id="homeTasks" class="list"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Recent Quiz</h3><button class="text-btn" data-go="quiz">New quiz</button></div>
+            <div id="recentQuiz"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-planner" class="page hidden">
+        <div class="section-title"><div><h2>Study Planner</h2><p>Organize your daily study tasks.</p></div></div>
+        <div class="card">
+          <form id="taskForm" class="task-form">
+            <input id="taskTitle" required placeholder="What do you want to study?">
+            <input id="taskSubject" placeholder="Subject">
+            <input id="taskDate" type="date" required>
+            <select id="taskPriority"><option>Normal</option><option>High</option><option>Low</option></select>
+            <button class="primary" type="submit">+ Add Task</button>
+          </form>
+        </div>
+        <div id="plannerList" class="task-list"></div>
+      </section>
+
+      <section id="page-topics" class="page hidden">
+        <div class="section-title"><div><h2>Topics</h2><p>Track the subjects you are working on.</p></div></div>
+        <div id="topicsGrid" class="topic-grid"></div>
+      </section>
+
+      <section id="page-quiz" class="page hidden">
+        <div class="section-title"><div><h2>AI Quiz Generator 🤖</h2><p>Generate a personalized quiz using your topic, level and profile.</p></div></div>
+        <div class="card quiz-generator">
+          <div class="grid-3">
+            <label>Topic<input id="quizTopic" placeholder="e.g. JavaScript Arrays"></label>
+            <label>Difficulty<select id="quizDifficulty"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></label>
+            <label>Questions<select id="quizCount"><option>5</option><option>10</option><option>15</option></select></label>
+          </div>
+          <button id="generateQuiz" class="primary">✨ Generate Quiz</button>
+          <span id="aiStatus" class="status"></span>
+        </div>
+        <div id="quizArea" class="quiz-area hidden"></div>
+      </section>
+
+      <section id="page-profile" class="page hidden">
+        <div class="section-title"><div><h2>My Profile</h2><p>Update your study profile and preferences.</p></div></div>
+        <form id="profileForm" class="card profile-form">
+          <div class="profile-head"><div id="profileAvatar" class="avatar big">U</div><div><h3 id="profileDisplayName">User</h3><p id="profileEmail" class="muted"></p></div></div>
+          <div class="grid-2">
+            <label>Full name<input id="profileName" required></label>
+            <label>Email<input id="profileEmailInput" type="email" required></label>
+            <label>Class / Course<input id="profileCourse" required></label>
+            <label>School / College<input id="profileCollege"></label>
+            <label>Subjects<input id="profileSubjects"></label>
+            <label>Daily study target<input id="profileHours" type="number" min="1" max="16"></label>
+          </div>
+          <label>Study goal<textarea id="profileGoal" rows="3"></textarea></label>
+          <button class="primary" type="submit">Save Profile</button>
+        </form>
+      </section>
+
+      <section id="page-settings" class="page hidden">
+        <div class="section-title"><div><h2>Settings</h2><p>Customize your StudyBuddy experience.</p></div></div>
+        <div class="card settings-list">
+          <div class="setting"><div><strong>Dark mode</strong><small>Switch between light and dark interface.</small></div><label class="switch"><input id="darkMode" type="checkbox"><span></span></label></div>
+          <div class="setting danger"><div><strong>Reset my study data</strong><small>Deletes tasks, topics and quiz history for this account.</small></div><button id="resetData" class="danger-btn">Reset Data</button></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
